@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "94594165365",
+    "project_id": "dongelek",
+    "storage_bucket": "dongelek.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94594165365:android:cc7d2f0dfb0e3e21ece63c",
+        "android_client_info": {
+          "package_name": "com.sm.dongelek"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "94594165365-ije1216b39s3l9a7eondcm7kieev826n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtDH_WPSOOAI_a-DPvW6PzCDkwIEDbbyc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "94594165365-ije1216b39s3l9a7eondcm7kieev826n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
