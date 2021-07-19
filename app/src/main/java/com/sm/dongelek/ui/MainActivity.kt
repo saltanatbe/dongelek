@@ -14,9 +14,11 @@ class MainActivity : BindingActivity<MainActivityBinding>(MainActivityBinding::i
 
     private var currentNavController: LiveData<NavController>? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.run {
+            println("hello")
 
             val navGraphIds = listOf(
                 R.id.nav_home,
