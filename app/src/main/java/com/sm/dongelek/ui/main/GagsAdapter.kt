@@ -1,24 +1,25 @@
 package com.sm.dongelek.ui.main
 
-import android.content.Context
-import android.content.Intent
+import android.content.SharedPreferences
 import android.text.Html
 import android.view.View
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
+import android.widget.CheckBox
 import com.sm.dinio.utils.binding.BindingRvAdapter
 import com.sm.dongelek.databinding.GagItemBinding
 import com.sm.dongelek.utils.ImageUtils
 import com.sm.dongelek.utils.loadUrl
-import kotlin.coroutines.coroutineContext
 
 class GagsAdapter(
-    private val onClick: (Gag) -> Unit
+        private val onClick: (Gag) -> Unit,
+        private val onShareClick: (Gag) -> Unit,
+        private val saveIntoSharedPreference: (Gag, CheckBox) -> Unit,
+        private val getSharedPreference: (Gag) -> Boolean
 ): BindingRvAdapter<Gag, GagItemBinding>(GagItemBinding::inflate) {
 
-    override fun bind(item: Gag, binding: GagItemBinding) {
-        binding.run {
 
+    override fun bind(item: Gag, binding: GagItemBinding) {
+
+        binding.run {
             tvContent.visibility = if (item.text.isNullOrEmpty()) View.GONE else View.VISIBLE
             tvContent.text = Html.fromHtml(item.text ?: "")
 
@@ -32,15 +33,16 @@ class GagsAdapter(
             }
 
             cb.setOnCheckedChangeListener(null)
-            cb.setChecked(item.isFav)
+            cb.isChecked = getSharedPreference.invoke(item)
+            //item.favNum = if (cb.isChecked) (item.favNum + 1) else (item.favNum)
             if (item.favNum!=0) {
                 cb.text = item.favNum.toString()
             } else {
                 cb.text = ""
             }
 
-            cb.setOnCheckedChangeListener { _, isClicked ->
-                item.isFav = isClicked
+            cb.setOnCheckedChangeListener { _, _ ->
+                saveIntoSharedPreference.invoke(item, cb)
                 item.favNum = if (cb.isChecked) (item.favNum + 1) else (item.favNum - 1)
                 if (item.favNum!=0) {
                     cb.text = item.favNum.toString()
@@ -54,18 +56,7 @@ class GagsAdapter(
             }
 
             ibShare.setOnClickListener{
-                val shareIntent = Intent.createChooser(Intent().apply {
-                    action = Intent.ACTION_SEND
-                    if (!item.text.isNullOrEmpty()){
-                        putExtra(Intent.EXTRA_TEXT, Html.fromHtml(item.text))
-                        type = "text/plain"
-                    }
-                    if (!item.image.isNullOrEmpty()){
-                        putExtra(Intent.EXTRA_TEXT, item.image)
-                        type = "text/plain"
-                    }
-                }, null)
-                it.context.startActivity(shareIntent)
+                onShareClick.invoke(item)
             }
 
             root.setOnClickListener {
@@ -74,7 +65,6 @@ class GagsAdapter(
 
         }
     }
-    
 
 
 }

@@ -1,7 +1,9 @@
 package com.sm.dongelek.ui.main
 
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
@@ -21,7 +23,7 @@ class PostDetailsFragment: BindingFragment<FragmentPostDetailsBinding>(FragmentP
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.run {
-            var gag = arguments?.getParcelable("gag_item") as? Gag
+            val gag = arguments?.getParcelable("gag_item") as? Gag
 
             toolbar.setNavigationOnClickListener{
                 findNavController().navigateUp()
@@ -32,7 +34,9 @@ class PostDetailsFragment: BindingFragment<FragmentPostDetailsBinding>(FragmentP
                 tvPostContent.text = Html.fromHtml(it.text ?: "")
                 iv.loadUrl(it.image)
                 iv.visibility = if (it.image.isNullOrEmpty()) View.GONE else View.VISIBLE
-                cbFavourite.isChecked = it.isFav
+                cbFavourite.setOnCheckedChangeListener(null)
+                val sp: SharedPreferences = requireContext().getSharedPreferences("likes", Context.MODE_PRIVATE)
+                cbFavourite.isChecked = sp.getBoolean(it.text+it.image, false)
                 if (it.favNum!=0) {
                     cbFavourite.text = it.favNum.toString()
                 } else {
@@ -40,17 +44,18 @@ class PostDetailsFragment: BindingFragment<FragmentPostDetailsBinding>(FragmentP
                 }
             }
 
-            cbFavourite.setOnCheckedChangeListener { _, isClicked ->
-                gag?.let{
-                    it.isFav = isClicked
-                    it.favNum = it.favNum.plus(if (cbFavourite.isChecked) (+1) else (-1))!!
-                    if (it.favNum!=0) {
-                        cbFavourite.text = it.favNum.toString()
-                    } else {
-                        cbFavourite.text = ""
-                    }
-                }
 
+            cbFavourite.setOnCheckedChangeListener { _, _ ->
+                val sp: SharedPreferences = requireContext().getSharedPreferences("likes", Context.MODE_PRIVATE)
+                val editor = sp.edit()
+                editor.putBoolean(gag?.text+gag?.image, cbFavourite.isChecked)
+                editor.apply()
+                gag?.favNum = if (cbFavourite.isChecked) (gag?.favNum!! + 1) else (gag?.favNum!! - 1)
+                if (gag.favNum !=0) {
+                    cbFavourite.text = gag.favNum.toString()
+                } else {
+                    cbFavourite.text = ""
+                }
             }
 
             ibShare.setOnClickListener{

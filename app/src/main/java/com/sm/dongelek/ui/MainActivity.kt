@@ -1,5 +1,6 @@
 package com.sm.dongelek.ui
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
@@ -16,7 +17,9 @@ class MainActivity : BindingActivity<MainActivityBinding>(MainActivityBinding::i
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
         binding.run {
             println("hello")
 

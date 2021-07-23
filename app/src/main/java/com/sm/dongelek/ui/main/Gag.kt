@@ -7,6 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class Gag(
         val text: String?,
         val image: String?,
-        var isFav: Boolean,
         var favNum: Int
 ) : Parcelable
