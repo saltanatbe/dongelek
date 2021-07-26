@@ -43,7 +43,6 @@ abstract class BindingRvAdapter<M: Any, V: ViewBinding>(
         private val bind: (item: M, binding: V) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-
         fun bind(item: M) {
             bind.invoke(item, binding)
         }

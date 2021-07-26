@@ -1,6 +1,7 @@
 package com.sm.dongelek.ui.main
 
 import android.content.Context
+import android.content.Context.MODE_MULTI_PROCESS
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
@@ -37,11 +38,19 @@ class TextFragment : BindingFragment<TextFragmentBinding> (TextFragmentBinding :
                 val sp: SharedPreferences = requireContext().getSharedPreferences("likes", MODE_PRIVATE)
                 val editor = sp.edit()
                 editor.putBoolean(item.text+item.image, cb.isChecked)
+                if (cb.isChecked){
+                    editor.putInt("likes"+item.text+item.image, sp.getInt("likes"+item.text+item.image, 0)+1)
+                } else {
+                    editor.putInt("likes"+item.text+item.image, sp.getInt("likes"+item.text+item.image, 0)-1)
+                }
                 editor.apply()
             }, { item ->
                 val sp: SharedPreferences = requireContext().getSharedPreferences("likes", MODE_PRIVATE)
                 return@GagsAdapter sp.getBoolean(item.text+item.image, false)
-        })
+            }, { item ->
+                val sp: SharedPreferences = requireContext().getSharedPreferences("likes", MODE_PRIVATE)
+                return@GagsAdapter sp.getInt("likes"+item.text+item.image, 0)
+            })
 
             rv.adapter = gagsAdapter
 

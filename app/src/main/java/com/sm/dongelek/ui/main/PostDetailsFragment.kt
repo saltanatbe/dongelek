@@ -34,28 +34,24 @@ class PostDetailsFragment: BindingFragment<FragmentPostDetailsBinding>(FragmentP
                 tvPostContent.text = Html.fromHtml(it.text ?: "")
                 iv.loadUrl(it.image)
                 iv.visibility = if (it.image.isNullOrEmpty()) View.GONE else View.VISIBLE
-                cbFavourite.setOnCheckedChangeListener(null)
+                //cbFavourite.setOnCheckedChangeListener(null)
                 val sp: SharedPreferences = requireContext().getSharedPreferences("likes", Context.MODE_PRIVATE)
                 cbFavourite.isChecked = sp.getBoolean(it.text+it.image, false)
-                if (it.favNum!=0) {
-                    cbFavourite.text = it.favNum.toString()
-                } else {
-                    cbFavourite.text = ""
-                }
+                cbFavourite.text = sp.getInt("likes"+gag.text+gag.image, 0).toString()
             }
 
 
-            cbFavourite.setOnCheckedChangeListener { _, _ ->
+            cbFavourite.setOnCheckedChangeListener { _, isClicked ->
                 val sp: SharedPreferences = requireContext().getSharedPreferences("likes", Context.MODE_PRIVATE)
                 val editor = sp.edit()
                 editor.putBoolean(gag?.text+gag?.image, cbFavourite.isChecked)
-                editor.apply()
-                gag?.favNum = if (cbFavourite.isChecked) (gag?.favNum!! + 1) else (gag?.favNum!! - 1)
-                if (gag.favNum !=0) {
-                    cbFavourite.text = gag.favNum.toString()
+                if (cbFavourite.isChecked){
+                    editor.putInt("likes"+gag?.text+gag?.image, sp.getInt("likes"+gag?.text+gag?.image, 0)+1)
                 } else {
-                    cbFavourite.text = ""
+                    editor.putInt("likes"+gag?.text+gag?.image, sp.getInt("likes"+gag?.text+gag?.image, 0)-1)
                 }
+                editor.apply()
+                cbFavourite.text=sp.getInt("likes"+gag?.text+gag?.image, 0).toString()
             }
 
             ibShare.setOnClickListener{

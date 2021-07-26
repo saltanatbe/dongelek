@@ -13,11 +13,13 @@ class GagsAdapter(
         private val onClick: (Gag) -> Unit,
         private val onShareClick: (Gag) -> Unit,
         private val saveIntoSharedPreference: (Gag, CheckBox) -> Unit,
-        private val getSharedPreference: (Gag) -> Boolean
+        private val getSharedPreferenceCheckBox: (Gag) -> Boolean,
+        private val getSharedPreferenceLikes: (Gag) -> Int
 ): BindingRvAdapter<Gag, GagItemBinding>(GagItemBinding::inflate) {
 
 
     override fun bind(item: Gag, binding: GagItemBinding) {
+
 
         binding.run {
             tvContent.visibility = if (item.text.isNullOrEmpty()) View.GONE else View.VISIBLE
@@ -33,22 +35,13 @@ class GagsAdapter(
             }
 
             cb.setOnCheckedChangeListener(null)
-            cb.isChecked = getSharedPreference.invoke(item)
-            //item.favNum = if (cb.isChecked) (item.favNum + 1) else (item.favNum)
-            if (item.favNum!=0) {
-                cb.text = item.favNum.toString()
-            } else {
-                cb.text = ""
-            }
+
+            cb.isChecked = getSharedPreferenceCheckBox.invoke(item)
+            cb.text = getSharedPreferenceLikes.invoke(item).toString()
 
             cb.setOnCheckedChangeListener { _, _ ->
                 saveIntoSharedPreference.invoke(item, cb)
-                item.favNum = if (cb.isChecked) (item.favNum + 1) else (item.favNum - 1)
-                if (item.favNum!=0) {
-                    cb.text = item.favNum.toString()
-                } else {
-                    cb.text = ""
-                }
+                cb.text= getSharedPreferenceLikes.invoke(item).toString()
             }
 
             ibComment.setOnClickListener{

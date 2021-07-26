@@ -30,11 +30,9 @@ class MainViewModel: ViewModel() {
             it.documents.forEach {
 //                Timber.d("Success: %s", it.data)
                 if (it.getString("text").isNullOrEmpty()){
-                    imageList.add(Gag(it.getString("text"), it.getString("image"),
-                             0))
+                    imageList.add(Gag(it.getString("text"), it.getString("image")))
                 } else {
-                    textList.add(Gag(it.getString("text"), it.getString("image"),
-                             0))
+                    textList.add(Gag(it.getString("text"), it.getString("image")))
                 }
             }
             _imageGags.value = imageList
