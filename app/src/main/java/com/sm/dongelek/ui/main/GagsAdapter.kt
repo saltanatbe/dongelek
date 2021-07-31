@@ -1,25 +1,22 @@
 package com.sm.dongelek.ui.main
 
-import android.content.SharedPreferences
 import android.text.Html
 import android.view.View
 import android.widget.CheckBox
 import com.sm.dinio.utils.binding.BindingRvAdapter
+import com.sm.dongelek.data.likes.LikesDataSource
+import com.sm.dongelek.data.models.Gag
 import com.sm.dongelek.databinding.GagItemBinding
 import com.sm.dongelek.utils.ImageUtils
 import com.sm.dongelek.utils.loadUrl
 
 class GagsAdapter(
-        private val onClick: (Gag) -> Unit,
-        private val onShareClick: (Gag) -> Unit,
-        private val saveIntoSharedPreference: (Gag, CheckBox) -> Unit,
-        private val getSharedPreferenceCheckBox: (Gag) -> Boolean,
-        private val getSharedPreferenceLikes: (Gag) -> Int
+    private val onClick: (Gag) -> Unit,
+    private val onShareClick: (Gag) -> Unit,
+    private val dataSource: LikesDataSource
 ): BindingRvAdapter<Gag, GagItemBinding>(GagItemBinding::inflate) {
 
-
     override fun bind(item: Gag, binding: GagItemBinding) {
-
 
         binding.run {
             tvContent.visibility = if (item.text.isNullOrEmpty()) View.GONE else View.VISIBLE
@@ -36,12 +33,10 @@ class GagsAdapter(
 
             cb.setOnCheckedChangeListener(null)
 
-            cb.isChecked = getSharedPreferenceCheckBox.invoke(item)
-            cb.text = getSharedPreferenceLikes.invoke(item).toString()
+            cb.isChecked = dataSource.isLiked(item)
 
             cb.setOnCheckedChangeListener { _, _ ->
-                saveIntoSharedPreference.invoke(item, cb)
-                cb.text= getSharedPreferenceLikes.invoke(item).toString()
+                dataSource.like(cb.isChecked, item)
             }
 
             ibComment.setOnClickListener{

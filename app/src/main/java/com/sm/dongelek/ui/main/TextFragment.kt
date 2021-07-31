@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.sm.dongelek.R
+import com.sm.dongelek.data.likes.LikesPersistentDataSource
 import com.sm.dongelek.databinding.TextFragmentBinding
 import com.sm.dongelek.utils.BindingFragment
 
@@ -34,23 +35,7 @@ class TextFragment : BindingFragment<TextFragmentBinding> (TextFragmentBinding :
                     }
                 }, null)
                 requireActivity().startActivity(shareIntent)
-            }, { item, cb ->
-                val sp: SharedPreferences = requireContext().getSharedPreferences("likes", MODE_PRIVATE)
-                val editor = sp.edit()
-                editor.putBoolean(item.text+item.image, cb.isChecked)
-                if (cb.isChecked){
-                    editor.putInt("likes"+item.text+item.image, sp.getInt("likes"+item.text+item.image, 0)+1)
-                } else {
-                    editor.putInt("likes"+item.text+item.image, sp.getInt("likes"+item.text+item.image, 0)-1)
-                }
-                editor.apply()
-            }, { item ->
-                val sp: SharedPreferences = requireContext().getSharedPreferences("likes", MODE_PRIVATE)
-                return@GagsAdapter sp.getBoolean(item.text+item.image, false)
-            }, { item ->
-                val sp: SharedPreferences = requireContext().getSharedPreferences("likes", MODE_PRIVATE)
-                return@GagsAdapter sp.getInt("likes"+item.text+item.image, 0)
-            })
+            }, LikesPersistentDataSource(requireContext().getSharedPreferences("likes", MODE_PRIVATE)))
 
             rv.adapter = gagsAdapter
 

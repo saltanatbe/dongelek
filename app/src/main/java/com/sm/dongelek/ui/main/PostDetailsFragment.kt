@@ -1,23 +1,16 @@
 package com.sm.dongelek.ui.main
 
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.view.View
-import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
-import com.sm.dongelek.R
+import com.sm.dongelek.data.models.Gag
 import com.sm.dongelek.databinding.FragmentPostDetailsBinding
 import com.sm.dongelek.utils.BindingFragment
-import com.sm.dongelek.utils.ImageUtils
 import com.sm.dongelek.utils.loadUrl
-import com.stfalcon.imageviewer.StfalconImageViewer
 
 class PostDetailsFragment: BindingFragment<FragmentPostDetailsBinding>(FragmentPostDetailsBinding::inflate)  {
 
